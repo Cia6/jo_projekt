@@ -26,11 +26,12 @@ class SpringBootRestTest {
     @Autowired
     TextService textService;
 
+    String str =
+            "Gorycz, tęsknotę zamień w samotność serca kukułko";
+
 
     @Test
     void testSetText() {
-        String str =
-                "I, Robot, Isaac Asimov,LocalDate.of(1950, 12, 2";
 
         ResponseEntity<Boolean> responseEntity = restTemplate
                 .postForEntity("/text", str, Boolean.class);
@@ -40,9 +41,15 @@ class SpringBootRestTest {
     }
 
     @Test
+    void testSetText2() {
+
+        textService.setText(str);
+
+        assertEquals(str, textService.getText().getText());
+    }
+
+    @Test
     void testCountString() {
-        String str =
-                "I, Robot, Isaac Asimov,LocalDate.of(1950, 12, 2";
 
         ResponseEntity<Boolean> responseEntity = restTemplate
                 .postForEntity("/count", str, Boolean.class);
@@ -51,10 +58,18 @@ class SpringBootRestTest {
         assertEquals(true, responseEntity.getBody());
     }
 
+    //?
+    @Test
+    void testCountString2() {
+
+        textService.setText(str);
+        textService.countString("serca");
+
+        assertEquals(1, textService.countString("serca"));
+    }
+
     @Test
     void testRemoveString() {
-        String str =
-                "I, Robot, Isaac Asimov,LocalDate.of(1950, 12, 2";
 
         ResponseEntity<Boolean> responseEntity = restTemplate
                 .postForEntity("/remove", str, Boolean.class);
@@ -64,9 +79,16 @@ class SpringBootRestTest {
     }
 
     @Test
+    void testRemoveString2() {
+
+        textService.setText(str);
+        textService.removeString(" serca");
+
+        assertEquals("Gorycz, tęsknotę zamień w samotność kukułko", textService.getText().getText());
+    }
+
+    @Test
     void testAppend() {
-        String str =
-                "I, Robot, Isaac Asimov,LocalDate.of(1950, 12, 2";
 
         ResponseEntity<Boolean> responseEntity = restTemplate
                 .postForEntity("/append", str, Boolean.class);
@@ -77,13 +99,11 @@ class SpringBootRestTest {
 
     @Test
     void testAppend2() {
-        String str =
-                "I, Robot, Isaac Asimov,LocalDate.of(1950, 12, 2";
 
-        String resault = textService.getText().getText()+str;
+        String result = textService.getText().getText()+str;
         textService.append(str);
 
-        assertEquals(resault, textService.getText().getText());
+        assertEquals(result, textService.getText().getText());
     }
 
 }
