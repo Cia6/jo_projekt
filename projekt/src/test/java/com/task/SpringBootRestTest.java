@@ -1,20 +1,22 @@
 package com.task;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
-
-
-import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.stream.Stream;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -27,8 +29,21 @@ class SpringBootRestTest {
     TextService textService;
 
     String str =
-            "Gorycz, tęsknotę zamień w samotność serca kukułko";
+            "Gorycz, tęsknotę zamień w samotność serca kukułko!$%&";
 
+    static Stream<Text> textProvider() {
+        Text text1 = new Text();
+        text1.setText("kukułka");
+        Text text2 = new Text();
+        text2.setText("kanarek");
+        return Stream.of(text1, text2);
+    }
+
+    @ParameterizedTest
+    @MethodSource("textProvider")
+    void testTextProvider(Text text) {
+        assertNotNull(text);
+    }
 
     @Test
     void testSetText() {
@@ -84,7 +99,7 @@ class SpringBootRestTest {
         textService.setText(str);
         textService.removeString(" serca");
 
-        assertEquals("Gorycz, tęsknotę zamień w samotność kukułko", textService.getText().getText());
+        assertEquals("Gorycz, tęsknotę zamień w samotność kukułko!$%&", textService.getText().getText());
     }
 
     @Test
@@ -105,5 +120,13 @@ class SpringBootRestTest {
 
         assertEquals(result, textService.getText().getText());
     }
+
+    @Test
+    void exceptionTest(){
+        Throwable exception = assertThrows(IllegalArgumentException.class,
+                textService.getNthWord(,100));
+        assertEquals("a message", exception.getMessage());
+    }
+
 
 }

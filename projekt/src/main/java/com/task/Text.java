@@ -43,4 +43,11 @@ public class Text {
         setText(stringBuilder.toString());
     }
 
+    public static String getNthWord(String text, int n) {
+        String[] temp = text.split(" ");
+        if (n-1 < temp.length)
+            return temp[n-1];
+        return null;
+    }
+
 }

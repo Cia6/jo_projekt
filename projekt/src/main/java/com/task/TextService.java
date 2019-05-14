@@ -27,4 +27,8 @@ public class TextService {
         this.text.append(string);
     }
 
+    public Text getNthWord(String string, int n) {
+        return this.getNthWord(string, n);
+    }
+
 }
