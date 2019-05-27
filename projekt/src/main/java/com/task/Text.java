@@ -1,22 +1,25 @@
 package com.task;
 
-public class Text {
+import java.util.*;
+import java.util.stream.Collectors;
 
-    private String text = " ";
+class Text {
+
+    private String text = "test text";
 
 
-    public Text() {
+    Text() {
     }
 
-    public String getText() {
+    String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    void setText(String text) {
         this.text = text;
     }
 
-    public int countString (String string) {
+    int countString (String string) {
         int lastIndex = 0;
         int count = 0;
 
@@ -32,22 +35,45 @@ public class Text {
         return count;
     }
 
-    public void removeString(String string) {
+    void removeString(String string) {
         setText(getText().replaceAll(string, ""));
     }
 
-    public void append(String string) {
+    void append(String string) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getText());
         stringBuilder.append(string);
         setText(stringBuilder.toString());
     }
 
-    public static String getNthWord(String text, int n) {
-        String[] temp = text.split(" ");
-        if (n-1 < temp.length)
+    String getNthWord(int n) throws Exception{
+        String[] temp = this.getText().replaceAll("[<>{}\"/|;:.,!?@#$%^=&*()¿§«»ω⊙¤°℃℉€¥£¢¡®©_+]"," ")
+                .replaceAll("\n"," ").split(" ");
+        if (n-1 < temp.length){
             return temp[n-1];
-        return null;
+        }else{
+            throw new Exception("Exception with parameter: " + n);
+        }
     }
+
+    List<Map.Entry<String, Long>> getTopFive (){
+        List<String>  wordList = Arrays.asList(this.getText()
+                .replaceAll("[<>{}\"/|;:.,!?@#$%^=&*()¿§«»ω⊙¤°℃℉€¥£¢¡®©_+]"," ")
+                .replaceAll("\n"," ")
+                .split(" "));
+
+        Map<String, Long> map = wordList.stream()
+                .filter(word -> word.length()>2)
+                .collect(Collectors.groupingBy(w -> w, Collectors.counting()));
+
+        List<Map.Entry<String, Long>> result = map.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(5)
+                .collect(Collectors.toList());
+
+
+        return result;
+    }
+
 
 }

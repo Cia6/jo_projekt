@@ -2,33 +2,42 @@ package com.task;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Service
-public class TextService {
+class TextService {
 
     private Text text = new Text();
 
-    public void setText(String text) {
-        this.text.setText(text);
+    void setText(String text) {
+        this.getText().setText(text);
     }
 
-    public Text getText() {
+    Text getText() {
         return this.text;
     }
 
-    public int countString (String string) {
-        return this.text.countString(string);
+    int countString (String string) {
+        return this.getText().countString(string);
     }
 
-    public void removeString(String string) {
-        this.text.removeString(string);
+    void removeString(String string) {
+        this.getText().removeString(string);
     }
 
-    public void append(String string) {
-        this.text.append(string);
+    void append(String string) {
+        this.getText().append(string);
     }
 
-    public Text getNthWord(String string, int n) {
-        return this.getNthWord(string, n);
+    String getNthWord(int n) throws Exception{
+        return this.getText().getNthWord(n);
     }
+
+    List<Map.Entry<String, Long>> topFive (){
+       return text.getTopFive();
+    }
+
 
 }
